@@ -3,48 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HomePro Eric - Americana</title>
+    <title>HOMEPRO AMERICANA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #020617; color: #f8fafc; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
-        .btn-green { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
-        .card { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+        body { background-color: #0a0f1a; color: white; font-family: sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
+        .btn-green { background: #2ecc71; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); border-radius: 50px; transition: 0.3s; }
+        .btn-green:active { transform: scale(0.95); }
+        .pulse { animation: pulse-green 2s infinite; }
+        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(46, 204, 113, 0); } 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); } }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-6">
+<body class="p-6 max-w-md mx-auto">
 
-    <div class="text-center mb-10">
-        <h1 class="text-3xl font-black tracking-tighter italic">HOME<span class="text-green-500">PRO</span></h1>
-        <p class="text-slate-500 text-[10px] font-bold tracking-[0.4em] uppercase">Unidade Americana | Eric</p>
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-black italic tracking-tighter">HOME<span class="text-[#2ecc71]">PRO</span></h1>
+        <p class="text-[10px] tracking-[0.3em] uppercase text-gray-500">Unidade Americana | Eric</p>
     </div>
 
-    <!-- Painel de Saldo -->
-    <div onclick="add(15.20)" class="w-64 h-64 rounded-full border-4 border-slate-800 border-t-green-500 flex flex-col items-center justify-center bg-slate-900 shadow-2xl mb-12 cursor-pointer active:scale-90 transition-transform">
-        <span class="text-slate-500 text-[10px] font-bold uppercase mb-1 tracking-widest">Saldo Atual</span>
-        <div class="text-4xl font-black flex items-baseline gap-1 text-white">
-            <span class="text-green-500 text-xl font-bold">R$</span>
-            <span id="res">0,00</span>
-        </div>
-        <p class="text-green-500 text-[8px] font-bold animate-pulse mt-4">TOQUE PARA PROCESSAR</p>
+    <div class="glass p-8 text-center mb-6 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-[#2ecc71]"></div>
+        <p class="text-gray-400 text-xs uppercase font-bold mb-2">Saldo Atual</p>
+        <div class="text-5xl font-bold mb-2">R$ <span id="saldo">0,00</span></div>
+        <p class="text-[9px] text-[#2ecc71] animate-pulse">SISTEMA VERIFICADO: ERIC_AM_01</p>
     </div>
 
-    <div class="w-full max-w-xs space-y-4">
-        <button onclick="add(50)" class="btn-green w-full py-5 rounded-3xl font-black text-white text-sm uppercase tracking-widest active:scale-95 transition-all shadow-lg shadow-green-500/20">
-            🚀 Tarefa Americana (+50)
-        </button>
-        
-        <div class="text-center">
-            <p class="text-slate-600 text-[9px] font-bold uppercase">Sistema Verificado: Eric_AM_01</p>
-            <button onclick="window.location.reload()" class="text-blue-500 text-[10px] underline mt-2">Reiniciar Sistema</button>
+    <input type="file" accept="image/*" capture="camera" id="camera" class="hidden" onchange="validarTarefa()">
+    
+    <button onclick="document.getElementById('camera').click()" class="btn-green w-full py-5 text-sm font-black uppercase flex items-center justify-center gap-3 mb-4 pulse">
+        🚀 Tarefa Americana (+50)
+    </button>
+
+    <div class="glass p-4 mt-8">
+        <h3 class="text-[10px] uppercase text-gray-500 mb-3 border-b border-white/10 pb-2">Histórico de Auditoria</h3>
+        <div id="log" class="space-y-3 max-h-40 overflow-y-auto text-[11px]">
+            <div class="text-gray-500 italic">Aguardando primeira atividade...</div>
         </div>
+    </div>
+
+    <div class="text-center mt-6">
+        <button onclick="resetar()" class="text-[9px] text-gray-600 underline">Reiniciar Sistema</button>
     </div>
 
     <script>
-        let s = 0;
-        function add(v) {
-            s += v;
-            document.getElementById('res').innerText = s.toLocaleString('pt-BR', {minimumFractionDigits: 2});
-            if(navigator.vibrate) navigator.vibrate(50);
+        // Carrega o saldo salvo ao abrir o app
+        let saldo = parseFloat(localStorage.getItem('saldoHomePro')) || 0;
+        document.getElementById('saldo').innerText = saldo.toFixed(2).replace('.', ',');
+
+        function validarTarefa() {
+            // Simula o processamento da foto
+            setTimeout(() => {
+                saldo += 50;
+                atualizarTudo("Tarefa Americana Concluída");
+                alert("✅ FOTO VALIDADA!\nR$ 50,00 adicionados ao saldo.");
+            }, 1000);
+        }
+
+        function atualizarTudo(msg) {
+            // Salva na memória do celular
+            localStorage.setItem('saldoHomePro', saldo);
+            document.getElementById('saldo').innerText = saldo.toFixed(2).replace('.', ',');
+            
+            // Cria o log
+            const log = document.getElementById('log');
+            if(log.innerText.includes("Aguardando")) log.innerHTML = "";
+            const div = document.createElement('div');
+            const agora = new Date().toLocaleTimeString('pt-BR');
+            div.innerHTML = <span class="text-[#2ecc71] font-bold">[${agora}]</span> ${msg};
+            log.prepend(div);
+        }
+
+        function resetar() {
+            if(confirm("Deseja zerar o sistema de Americana?")) {
+                localStorage.clear();
+                location.reload();
+            }
         }
     </script>
 </body>
