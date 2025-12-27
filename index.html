@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HomePro Eric - Americana</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #020617; color: #f8fafc; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        .btn-green { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
+        .card { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-6">
+
+    <div class="text-center mb-10">
+        <h1 class="text-3xl font-black tracking-tighter italic">HOME<span class="text-green-500">PRO</span></h1>
+        <p class="text-slate-500 text-[10px] font-bold tracking-[0.4em] uppercase">Unidade Americana | Eric</p>
+    </div>
+
+    <!-- Painel de Saldo -->
+    <div onclick="add(15.20)" class="w-64 h-64 rounded-full border-4 border-slate-800 border-t-green-500 flex flex-col items-center justify-center bg-slate-900 shadow-2xl mb-12 cursor-pointer active:scale-90 transition-transform">
+        <span class="text-slate-500 text-[10px] font-bold uppercase mb-1 tracking-widest">Saldo Atual</span>
+        <div class="text-4xl font-black flex items-baseline gap-1 text-white">
+            <span class="text-green-500 text-xl font-bold">R$</span>
+            <span id="res">0,00</span>
+        </div>
+        <p class="text-green-500 text-[8px] font-bold animate-pulse mt-4">TOQUE PARA PROCESSAR</p>
+    </div>
+
+    <div class="w-full max-w-xs space-y-4">
+        <button onclick="add(50)" class="btn-green w-full py-5 rounded-3xl font-black text-white text-sm uppercase tracking-widest active:scale-95 transition-all shadow-lg shadow-green-500/20">
+            🚀 Tarefa Americana (+50)
+        </button>
+        
+        <div class="text-center">
+            <p class="text-slate-600 text-[9px] font-bold uppercase">Sistema Verificado: Eric_AM_01</p>
+            <button onclick="window.location.reload()" class="text-blue-500 text-[10px] underline mt-2">Reiniciar Sistema</button>
+        </div>
+    </div>
+
+    <script>
+        let s = 0;
+        function add(v) {
+            s += v;
+            document.getElementById('res').innerText = s.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+            if(navigator.vibrate) navigator.vibrate(50);
+        }
+    </script>
+</body>
+</html>
