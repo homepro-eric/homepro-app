@@ -3,74 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HOMEPRO AMERICANA</title>
+    <title>HOMEPRO - SISTEMA GLOBAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0a0f1a; color: white; font-family: sans-serif; overflow: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
-        .btn-green { background: #2ecc71; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); border-radius: 50px; }
+        body { background-color: #0a0f1a; color: white; font-family: sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; }
+        .btn-main { background: linear-gradient(135deg, #2ecc71, #27ae60); box-shadow: 0 4px 20px rgba(46, 204, 113, 0.3); border-radius: 50px; transition: 0.3s; }
+        .btn-main:active { transform: scale(0.96); opacity: 0.9; }
         .pulse { animation: pulse-green 2s infinite; }
-        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(46, 204, 113, 0); } 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); } }
+        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.6); } 70% { box-shadow: 0 0 0 15px rgba(46, 204, 113, 0); } 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); } }
     </style>
 </head>
-<body class="p-6 max-w-md mx-auto">
+<body class="p-6 max-w-md mx-auto min-h-screen flex flex-col justify-between">
 
-    <div class="text-center mb-8">
-        <h1 class="text-3xl font-black italic tracking-tighter">HOME<span class="text-[#2ecc71]">PRO</span></h1>
-        <p class="text-[10px] tracking-[0.3em] uppercase text-gray-500">Unidade Americana | Eric</p>
+    <div class="text-center mt-4">
+        <h1 class="text-4xl font-black italic tracking-tighter">HOME<span class="text-[#2ecc71]">PRO</span></h1>
+        <div class="h-[2px] w-12 bg-[#2ecc71] mx-auto mt-1"></div>
+        <p class="text-[10px] tracking-[0.4em] uppercase text-gray-400 mt-3 font-bold">Desenvolvedor: Eric | Oficial</p>
     </div>
 
-    <div class="glass p-8 text-center mb-6">
-        <p class="text-gray-400 text-xs uppercase font-bold mb-2">Saldo Atual</p>
-        <div class="text-5xl font-bold mb-2">R$ <span id="saldo">0,00</span></div>
-        <p class="text-[9px] text-[#2ecc71]">SISTEMA ATIVO E MONITORADO</p>
+    <div class="glass p-10 text-center relative overflow-hidden my-8">
+        <div class="absolute top-0 right-0 p-2">
+            <span class="text-[8px] bg-[#2ecc71]/20 text-[#2ecc71] px-2 py-1 rounded-full border border-[#2ecc71]/30">LIVE</span>
+        </div>
+        <p class="text-gray-400 text-[10px] uppercase font-bold mb-3 tracking-widest">Saldo em Carteira</p>
+        <div class="text-6xl font-bold mb-2 tracking-tight">R$ <span id="displaySaldo">0,00</span></div>
+        <p class="text-[9px] text-gray-500 font-medium">Sincronizado com Banco de Dados Local</p>
     </div>
 
-    <input type="file" accept="image/*" capture="camera" id="cameraInput" class="hidden" onchange="processarPagamento()">
-    
-    <button onclick="abrirCamera()" class="btn-green w-full py-5 text-sm font-black uppercase flex items-center justify-center gap-3 mb-4 pulse">
-        🚀 Tarefa Americana (+50)
-    </button>
+    <div class="space-y-4">
+        <input type="file" accept="image/*" capture="camera" id="inputCaptura" class="hidden" onchange="validarFluxo()">
+        
+        <button onclick="document.getElementById('inputCaptura').click()" class="btn-main w-full py-6 text-sm font-black uppercase flex items-center justify-center gap-3 pulse">
+            📸 VALIDAR NOVA TAREFA (+50)
+        </button>
 
-    <div class="glass p-4 mt-8">
-        <h3 class="text-[10px] uppercase text-gray-500 mb-3 border-b border-white/10 pb-2">Histórico de Atividade</h3>
-        <div id="log" class="space-y-3 max-h-40 overflow-y-auto text-[11px]">
-            <div class="text-gray-500 italic">Aguardando registro...</div>
+        <div class="glass p-5">
+            <h3 class="text-[10px] uppercase text-gray-500 mb-4 font-bold border-b border-white/5 pb-2">Log de Auditoria Global</h3>
+            <div id="historico" class="space-y-3 max-h-32 overflow-y-auto text-[10px]">
+                <div class="text-gray-600 italic">Aguardando entrada de dados...</div>
+            </div>
         </div>
     </div>
 
-    <script>
-        // Carrega o valor que já estava salvo no celular
-        let saldoAtual = parseFloat(localStorage.getItem('saldo_homepro_v1')) || 0.00;
-        document.getElementById('saldo').innerText = saldoAtual.toFixed(2).replace('.', ',');
+    <div class="text-center pb-4">
+        <button onclick="zerarSistema()" class="text-[9px] text-gray-700 uppercase tracking-widest hover:text-red-500 transition">Reiniciar Módulo</button>
+    </div>
 
-        function abrirCamera() {
-            document.getElementById('cameraInput').click();
+    <script>
+        // Lógica de Persistência do Eric
+        let saldoGlobal = parseFloat(localStorage.getItem('homepro_global_saldo')) || 0.00;
+        document.getElementById('displaySaldo').innerText = saldoGlobal.toFixed(2).replace('.', ',');
+
+        function validarFluxo() {
+            // Feedback visual imediato
+            document.getElementById('displaySaldo').innerText = "VDO...";
+            
+            setTimeout(() => {
+                saldoGlobal += 50.00;
+                
+                // Gravação definitiva no dispositivo
+                localStorage.setItem('homepro_global_saldo', saldoGlobal);
+                
+                // Atualização da UI
+                document.getElementById('displaySaldo').innerText = saldoGlobal.toFixed(2).replace('.', ',');
+                
+                // Registro no Log
+                const lista = document.getElementById('historico');
+                if(lista.innerText.includes("Aguardando")) lista.innerHTML = "";
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center border-l-2 border-[#2ecc71] pl-2";
+                item.innerHTML = <span>Entrada de Crédito</span> <span class="text-[#2ecc71] font-bold">+50,00</span>;
+                lista.prepend(item);
+
+                alert("SISTEMA GLOBAL ATUALIZADO\nCrédito de R$ 50,00 confirmado.");
+            }, 1200);
         }
 
-        function processarPagamento() {
-            // 1. Muda o visor para mostrar que está lendo a foto
-            document.getElementById('saldo').innerText = "VDO...";
-
-            // 2. Simula a análise da foto por 1 segundo
-            setTimeout(() => {
-                saldoAtual += 50.00;
-                
-                // 3. SALVA de verdade na memória do celular
-                localStorage.setItem('saldo_homepro_v1', saldoAtual);
-                
-                // 4. ATUALIZA o visor com o valor novo
-                document.getElementById('saldo').innerText = saldoAtual.toFixed(2).replace('.', ',');
-                
-                // 5. Registra no histórico
-                const log = document.getElementById('log');
-                if(log.innerText.includes("Aguardando")) log.innerHTML = "";
-                const div = document.createElement('div');
-                div.innerHTML = <span class="text-[#2ecc71] font-bold">[${new Date().toLocaleTimeString()}]</span> Pagamento de R$ 50,00 liberado.;
-                log.prepend(div);
-
-                alert("✅ SUCESSO!\nFoto recebida. R$ 50,00 adicionados ao seu saldo de Americana.");
-            }, 1000);
+        function zerarSistema() {
+            if(confirm("Deseja formatar o saldo do sistema global?")) {
+                localStorage.removeItem('homepro_global_saldo');
+                location.reload();
+            }
         }
     </script>
 </body>
