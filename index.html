@@ -50,15 +50,16 @@
         let saldo = parseFloat(localStorage.getItem('saldoHomePro')) || 0;
         document.getElementById('saldo').innerText = saldo.toFixed(2).replace('.', ',');
 
-        function validarTarefa() {
-            // Simula o processamento da foto
+function validarTarefa() {
+            // Indica que está processando a foto de Americana
+            document.getElementById('saldo').innerText = "VDO...";
+            
             setTimeout(() => {
-                saldo += 50;
+                saldo += 50.00; 
                 atualizarTudo("Tarefa Americana Concluída");
                 alert("✅ FOTO VALIDADA!\nR$ 50,00 adicionados ao saldo.");
-            }, 1000);
+            }, 800); 
         }
-
         function atualizarTudo(msg) {
             // Salva na memória do celular
             localStorage.setItem('saldoHomePro', saldo);
@@ -82,3 +83,4 @@
     </script>
 </body>
 </html>
+
