@@ -1,4 +1,17 @@
-<!DOCTYPE html>
+[07:15, 28/12/2025] Santana😎: <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HOMEPRO GLOBAL - V5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #060a12; color: white; font-family: sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; }
+        .active-tab { color: #00f2fe; border-bottom: 2px solid #00f2fe; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 15px; }
+        .video-container iframe { position: absol…
+[07:21, 28/12/2025] Santana😎: <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -6,91 +19,78 @@
     <title>HOMEPRO GLOBAL - ERIC</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #060a12; color: white; font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.08); border-radius: 28px; }
-        .btn-action { background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3); border-radius: 18px; }
-        .nav-item { color: #4b5563; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-        .nav-active { color: #00f2fe; border-bottom: 2px solid #00f2fe; }
+        body { background-color: #060a12; color: white; font-family: sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
+        .btn-nav { font-size: 10px; font-weight: 900; color: #4b5563; text-transform: uppercase; padding: 10px; }
+        .active-tab { color: #00f2fe; border-bottom: 2px solid #00f2fe; }
+        .video-box { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; background: #000; }
+        .video-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
     </style>
 </head>
-<body class="p-5 max-w-md mx-auto min-h-screen flex flex-col">
+<body class="p-4 max-w-md mx-auto">
 
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h1 class="text-2xl font-black italic tracking-tighter">HOME<span class="text-[#00f2fe]">PRO</span></h1>
-            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Dev: Eric Oficial</p>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-black italic">HOME<span class="text-[#00f2fe]">PRO</span></h1>
+        <span class="bg-[#00f2fe]/10 text-[#00f2fe] text-[8px] px-2 py-1 rounded font-bold">V5 ATIVA</span>
+    </div>
+
+    <div class="flex justify-around mb-6 border-b border-white/5">
+        <button onclick="irPara('painel')" id="b-painel" class="btn-nav active-tab">Painel</button>
+        <button onclick="irPara('videos')" id="b-videos" class="btn-nav">Vídeos</button>
+        <button onclick="irPara('ajustes')" id="b-ajustes" class="btn-nav">Ajustes</button>
+    </div>
+
+    <div id="tela-painel" class="block">
+        <div class="glass p-10 text-center mb-6 shadow-2xl">
+            <p class="text-gray-500 text-[10px] font-bold uppercase mb-2">Crédito Disponível</p>
+            <div class="text-6xl font-black italic mb-2 text-white">R$ <span id="sald">0,00</span></div>
+            <p class="text-[8px] text-cyan-400 font-bold tracking-widest uppercase">Dev: Eric Oficial</p>
         </div>
-        <div class="bg-[#00f2fe]/10 p-2 rounded-xl border border-[#00f2fe]/20">
-            <span class="text-[#00f2fe] text-[10px] font-black">GLOBAL v4</span>
-        </div>
-    </div>
-
-    <div class="flex justify-around mb-6 border-b border-white/5 pb-2">
-        <button class="nav-item nav-active">Painel</button>
-        <button class="nav-item">Extrato</button>
-        <button class="nav-item">Equipa</button>
-    </div>
-
-    <div class="glass p-10 text-center mb-8 shadow-2xl">
-        <p class="text-gray-500 text-[10px] uppercase font-bold mb-2 tracking-[0.2em]">Crédito Disponível</p>
-        <div class="text-6xl font-black mb-1">R$ <span id="mainSaldo">0,00</span></div>
-        <div id="status" class="text-[8px] text-cyan-400 font-bold uppercase tracking-widest">Sincronizado via Satélite</div>
-    </div>
-
-    <div class="space-y-4">
-        <input type="file" accept="image/*" capture="camera" id="triggerCam" class="hidden" onchange="processarValidacao()">
         
-        <button onclick="document.getElementById('triggerCam').click()" class="btn-action w-full py-6 text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3">
-            📸 VALIDAR TAREFA (+50)
+        <button onclick="alert('Sistema de Fotos em Manutenção - Use a aba de Vídeos!')" class="w-full bg-cyan-500/10 border border-cyan-500/20 py-5 rounded-2xl text-[10px] font-black text-cyan-500 uppercase">
+            Módulo Câmera Bloqueado p/ Teste
         </button>
+    </div>
 
-        <div class="glass p-5 mt-4">
-            <h3 class="text-[9px] uppercase text-gray-500 mb-4 font-black flex justify-between">
-                <span>Auditoria Recente</span>
-                <span class="text-cyan-500">Auto-Save ON</span>
-            </h3>
-            <div id="feedLog" class="space-y-3 max-h-40 overflow-y-auto text-[10px]">
-                <div class="text-gray-700 italic text-center py-4">Aguardando primeira validação...</div>
+    <div id="tela-videos" class="hidden space-y-4">
+        <div class="glass p-4">
+            <h3 class="text-cyan-400 text-[10px] font-black uppercase mb-3">Treinamento Global</h3>
+            <div class="video-box">
+                <iframe src="https://www.youtube.com/embed/7pAK60ckbRY" allowfullscreen></iframe>
             </div>
+            <p class="text-[9px] text-gray-500 mt-2 italic text-center">Assista para aprender a operar o sistema.</p>
+        </div>
+    </div>
+
+    <div id="tela-ajustes" class="hidden">
+        <div class="glass p-6 text-center">
+            <h3 class="text-xs font-bold mb-4 uppercase">Configurações de Eric</h3>
+            <button onclick="localStorage.clear(); location.reload();" class="text-red-500 text-[10px] font-bold underline uppercase">
+                Resetar Todos os Dados
+            </button>
         </div>
     </div>
 
     <script>
-        // SISTEMA DE PERSISTÊNCIA ERIC v4
-        let dbSaldo = parseFloat(localStorage.getItem('homepro_v4_eric')) || 0.00;
-        document.getElementById('mainSaldo').innerText = dbSaldo.toFixed(2).replace('.', ',');
-
-        function processarValidacao() {
-            // SAIR DA PÁGINA DE CÂMERA E ATUALIZAR INTERFACE
-            const visor = document.getElementById('mainSaldo');
-            const status = document.getElementById('status');
+        function irPara(tela) {
+            // Esconde todas
+            document.getElementById('tela-painel').classList.add('hidden');
+            document.getElementById('tela-videos').classList.add('hidden');
+            document.getElementById('tela-ajustes').classList.add('hidden');
             
-            visor.innerText = "...";
-            status.innerText = "A PROCESSAR IMAGEM...";
-            status.classList.add('animate-pulse');
+            // Remove as cores dos botões
+            document.getElementById('b-painel').classList.remove('active-tab');
+            document.getElementById('b-videos').classList.remove('active-tab');
+            document.getElementById('b-ajustes').classList.remove('active-tab');
 
-            setTimeout(() => {
-                dbSaldo += 50.00;
-                
-                // GRAVAÇÃO NO DISPOSITIVO
-                localStorage.setItem('homepro_v4_eric', dbSaldo);
-                
-                // ATUALIZA VISOR
-                visor.innerText = dbSaldo.toFixed(2).replace('.', ',');
-                status.innerText = "VALIDAÇÃO CONCLUÍDA!";
-                status.classList.remove('animate-pulse');
-                
-                // ATUALIZA LOG
-                const feed = document.getElementById('feedLog');
-                if(feed.innerText.includes("Aguardando")) feed.innerHTML = "";
-                const row = document.createElement('div');
-                row.className = "flex justify-between items-center border-l-2 border-cyan-500 pl-3 py-1 bg-white/5 rounded-r-lg";
-                row.innerHTML = <span class="font-bold text-gray-400">Task Validada</span> <span class="text-cyan-400 font-black">+R$ 50,00</span>;
-                feed.prepend(row);
-
-                alert("SISTEMA GLOBAL\nTarefa registada com sucesso!");
-            }, 1500);
+            // Mostra a escolhida
+            document.getElementById('tela-' + tela).classList.remove('hidden');
+            document.getElementById('b-' + tela).classList.add('active-tab');
         }
+
+        // Carrega o saldo antigo só pra mostrar
+        let s = localStorage.getItem('homepro_v4_eric') || "0";
+        document.getElementById('sald').innerText = parseFloat(s).toFixed(2).replace('.', ',');
     </script>
 </body>
 </html>
