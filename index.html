@@ -6,10 +6,9 @@
     <title>HOMEPRO AMERICANA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0a0f1a; color: white; font-family: sans-serif; }
+        body { background-color: #0a0f1a; color: white; font-family: sans-serif; overflow: hidden; }
         .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
-        .btn-green { background: #2ecc71; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); border-radius: 50px; transition: 0.3s; }
-        .btn-green:active { transform: scale(0.95); }
+        .btn-green { background: #2ecc71; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); border-radius: 50px; }
         .pulse { animation: pulse-green 2s infinite; }
         @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(46, 204, 113, 0); } 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); } }
     </style>
@@ -21,66 +20,58 @@
         <p class="text-[10px] tracking-[0.3em] uppercase text-gray-500">Unidade Americana | Eric</p>
     </div>
 
-    <div class="glass p-8 text-center mb-6 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-1 bg-[#2ecc71]"></div>
+    <div class="glass p-8 text-center mb-6">
         <p class="text-gray-400 text-xs uppercase font-bold mb-2">Saldo Atual</p>
         <div class="text-5xl font-bold mb-2">R$ <span id="saldo">0,00</span></div>
-        <p class="text-[9px] text-[#2ecc71] animate-pulse">SISTEMA VERIFICADO: ERIC_AM_01</p>
+        <p class="text-[9px] text-[#2ecc71]">SISTEMA ATIVO E MONITORADO</p>
     </div>
 
-    <input type="file" accept="image/*" capture="camera" id="camera" class="hidden" onchange="validarTarefa()">
+    <input type="file" accept="image/*" capture="camera" id="cameraInput" class="hidden" onchange="processarPagamento()">
     
-    <button onclick="document.getElementById('camera').click()" class="btn-green w-full py-5 text-sm font-black uppercase flex items-center justify-center gap-3 mb-4 pulse">
+    <button onclick="abrirCamera()" class="btn-green w-full py-5 text-sm font-black uppercase flex items-center justify-center gap-3 mb-4 pulse">
         🚀 Tarefa Americana (+50)
     </button>
 
     <div class="glass p-4 mt-8">
-        <h3 class="text-[10px] uppercase text-gray-500 mb-3 border-b border-white/10 pb-2">Histórico de Auditoria</h3>
+        <h3 class="text-[10px] uppercase text-gray-500 mb-3 border-b border-white/10 pb-2">Histórico de Atividade</h3>
         <div id="log" class="space-y-3 max-h-40 overflow-y-auto text-[11px]">
-            <div class="text-gray-500 italic">Aguardando primeira atividade...</div>
+            <div class="text-gray-500 italic">Aguardando registro...</div>
         </div>
     </div>
 
-    <div class="text-center mt-6">
-        <button onclick="resetar()" class="text-[9px] text-gray-600 underline">Reiniciar Sistema</button>
-    </div>
-
     <script>
-        // Carrega o saldo salvo ao abrir o app
-        let saldo = parseFloat(localStorage.getItem('saldoHomePro')) || 0;
-        document.getElementById('saldo').innerText = saldo.toFixed(2).replace('.', ',');
+        // Carrega o valor que já estava salvo no celular
+        let saldoAtual = parseFloat(localStorage.getItem('saldo_homepro_v1')) || 0.00;
+        document.getElementById('saldo').innerText = saldoAtual.toFixed(2).replace('.', ',');
 
-function validarTarefa() {
-            // Indica que está processando a foto de Americana
+        function abrirCamera() {
+            document.getElementById('cameraInput').click();
+        }
+
+        function processarPagamento() {
+            // 1. Muda o visor para mostrar que está lendo a foto
             document.getElementById('saldo').innerText = "VDO...";
-            
-            setTimeout(() => {
-                saldo += 50.00; 
-                atualizarTudo("Tarefa Americana Concluída");
-                alert("✅ FOTO VALIDADA!\nR$ 50,00 adicionados ao saldo.");
-            }, 800); 
-        }
-        function atualizarTudo(msg) {
-            // Salva na memória do celular
-            localStorage.setItem('saldoHomePro', saldo);
-            document.getElementById('saldo').innerText = saldo.toFixed(2).replace('.', ',');
-            
-            // Cria o log
-            const log = document.getElementById('log');
-            if(log.innerText.includes("Aguardando")) log.innerHTML = "";
-            const div = document.createElement('div');
-            const agora = new Date().toLocaleTimeString('pt-BR');
-            div.innerHTML = <span class="text-[#2ecc71] font-bold">[${agora}]</span> ${msg};
-            log.prepend(div);
-        }
 
-        function resetar() {
-            if(confirm("Deseja zerar o sistema de Americana?")) {
-                localStorage.clear();
-                location.reload();
-            }
+            // 2. Simula a análise da foto por 1 segundo
+            setTimeout(() => {
+                saldoAtual += 50.00;
+                
+                // 3. SALVA de verdade na memória do celular
+                localStorage.setItem('saldo_homepro_v1', saldoAtual);
+                
+                // 4. ATUALIZA o visor com o valor novo
+                document.getElementById('saldo').innerText = saldoAtual.toFixed(2).replace('.', ',');
+                
+                // 5. Registra no histórico
+                const log = document.getElementById('log');
+                if(log.innerText.includes("Aguardando")) log.innerHTML = "";
+                const div = document.createElement('div');
+                div.innerHTML = <span class="text-[#2ecc71] font-bold">[${new Date().toLocaleTimeString()}]</span> Pagamento de R$ 50,00 liberado.;
+                log.prepend(div);
+
+                alert("✅ SUCESSO!\nFoto recebida. R$ 50,00 adicionados ao seu saldo de Americana.");
+            }, 1000);
         }
     </script>
 </body>
 </html>
-
