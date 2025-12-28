@@ -6,80 +6,90 @@
     <title>HOMEPRO GLOBAL - ERIC</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0a0f1a; color: white; font-family: sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; }
-        .btn-main { background: linear-gradient(135deg, #2ecc71, #27ae60); box-shadow: 0 4px 20px rgba(46, 204, 113, 0.3); border-radius: 50px; }
-        .pulse { animation: pulse-green 2s infinite; }
-        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.6); } 70% { box-shadow: 0 0 0 15px rgba(46, 204, 113, 0); } 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); } }
+        body { background-color: #060a12; color: white; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.08); border-radius: 28px; }
+        .btn-action { background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3); border-radius: 18px; }
+        .nav-item { color: #4b5563; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        .nav-active { color: #00f2fe; border-bottom: 2px solid #00f2fe; }
     </style>
 </head>
-<body class="p-6 max-w-md mx-auto min-h-screen flex flex-col justify-between">
+<body class="p-5 max-w-md mx-auto min-h-screen flex flex-col">
 
-    <div class="text-center mt-4">
-        <h1 class="text-4xl font-black italic tracking-tighter">HOME<span class="text-[#2ecc71]">PRO</span></h1>
-        <p class="text-[10px] tracking-[0.4em] uppercase text-gray-400 mt-2 font-bold">Desenvolvedor: Eric | Oficial</p>
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-2xl font-black italic tracking-tighter">HOME<span class="text-[#00f2fe]">PRO</span></h1>
+            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Dev: Eric Oficial</p>
+        </div>
+        <div class="bg-[#00f2fe]/10 p-2 rounded-xl border border-[#00f2fe]/20">
+            <span class="text-[#00f2fe] text-[10px] font-black">GLOBAL v4</span>
+        </div>
     </div>
 
-    <div class="glass p-10 text-center relative my-8">
-        <p class="text-gray-400 text-[10px] uppercase font-bold mb-3 tracking-widest">Saldo em Carteira</p>
-        <div class="text-6xl font-bold mb-2 tracking-tight text-white">R$ <span id="valorDisplay">0,00</span></div>
-        <p class="text-[9px] text-[#2ecc71] font-medium uppercase tracking-tighter">Sistema de Auditoria Ativo</p>
+    <div class="flex justify-around mb-6 border-b border-white/5 pb-2">
+        <button class="nav-item nav-active">Painel</button>
+        <button class="nav-item">Extrato</button>
+        <button class="nav-item">Equipa</button>
+    </div>
+
+    <div class="glass p-10 text-center mb-8 shadow-2xl">
+        <p class="text-gray-500 text-[10px] uppercase font-bold mb-2 tracking-[0.2em]">Crédito Disponível</p>
+        <div class="text-6xl font-black mb-1">R$ <span id="mainSaldo">0,00</span></div>
+        <div id="status" class="text-[8px] text-cyan-400 font-bold uppercase tracking-widest">Sincronizado via Satélite</div>
     </div>
 
     <div class="space-y-4">
-        <input type="file" accept="image/*" capture="camera" id="cameraCapture" class="hidden" onchange="executarSoma()">
+        <input type="file" accept="image/*" capture="camera" id="triggerCam" class="hidden" onchange="processarValidacao()">
         
-        <button onclick="document.getElementById('cameraCapture').click()" class="btn-main w-full py-6 text-sm font-black uppercase flex items-center justify-center gap-3 pulse">
-            📸 VALIDAR NOVA TAREFA (+50)
+        <button onclick="document.getElementById('triggerCam').click()" class="btn-action w-full py-6 text-sm font-black uppercase tracking-wider flex items-center justify-center gap-3">
+            📸 VALIDAR TAREFA (+50)
         </button>
 
-        <div class="glass p-5">
-            <h3 class="text-[10px] uppercase text-gray-500 mb-4 font-bold border-b border-white/5 pb-2">Log de Auditoria Global</h3>
-            <div id="logHistorico" class="space-y-3 max-h-32 overflow-y-auto text-[10px]">
-                <div class="text-gray-600 italic text-center">Nenhuma movimentação...</div>
+        <div class="glass p-5 mt-4">
+            <h3 class="text-[9px] uppercase text-gray-500 mb-4 font-black flex justify-between">
+                <span>Auditoria Recente</span>
+                <span class="text-cyan-500">Auto-Save ON</span>
+            </h3>
+            <div id="feedLog" class="space-y-3 max-h-40 overflow-y-auto text-[10px]">
+                <div class="text-gray-700 italic text-center py-4">Aguardando primeira validação...</div>
             </div>
         </div>
     </div>
 
-    <div class="text-center pb-4 mt-6">
-        <button onclick="resetTotal()" class="text-[9px] text-gray-700 uppercase tracking-widest hover:text-red-500">Reiniciar Sistema</button>
-    </div>
-
     <script>
-        // CARREGA O SALDO DO DISPOSITIVO
-        let saldoAtualizado = parseFloat(localStorage.getItem('homepro_v3_eric')) || 0.00;
-        document.getElementById('valorDisplay').innerText = saldoAtualizado.toFixed(2).replace('.', ',');
+        // SISTEMA DE PERSISTÊNCIA ERIC v4
+        let dbSaldo = parseFloat(localStorage.getItem('homepro_v4_eric')) || 0.00;
+        document.getElementById('mainSaldo').innerText = dbSaldo.toFixed(2).replace('.', ',');
 
-        function executarSoma() {
-            // MOSTRA QUE ESTÁ PROCESSANDO
-            document.getElementById('valorDisplay').innerText = "VDO...";
+        function processarValidacao() {
+            // SAIR DA PÁGINA DE CÂMERA E ATUALIZAR INTERFACE
+            const visor = document.getElementById('mainSaldo');
+            const status = document.getElementById('status');
             
+            visor.innerText = "...";
+            status.innerText = "A PROCESSAR IMAGEM...";
+            status.classList.add('animate-pulse');
+
             setTimeout(() => {
-                saldoAtualizado += 50.00;
+                dbSaldo += 50.00;
                 
-                // GRAVA NO CELULAR
-                localStorage.setItem('homepro_v3_eric', saldoAtualizado);
+                // GRAVAÇÃO NO DISPOSITIVO
+                localStorage.setItem('homepro_v4_eric', dbSaldo);
                 
-                // ATUALIZA A TELA
-                document.getElementById('valorDisplay').innerText = saldoAtualizado.toFixed(2).replace('.', ',');
+                // ATUALIZA VISOR
+                visor.innerText = dbSaldo.toFixed(2).replace('.', ',');
+                status.innerText = "VALIDAÇÃO CONCLUÍDA!";
+                status.classList.remove('animate-pulse');
                 
-                // CRIA O REGISTRO NO HISTÓRICO
-                const log = document.getElementById('logHistorico');
-                if(log.innerText.includes("Nenhuma")) log.innerHTML = "";
-                const entry = document.createElement('div');
-                entry.className = "flex justify-between items-center border-l-2 border-[#2ecc71] pl-2 py-1";
-                entry.innerHTML = <span>Crédito Liberado</span> <span class="text-[#2ecc71] font-bold">+R$ 50,00</span>;
-                log.prepend(entry);
+                // ATUALIZA LOG
+                const feed = document.getElementById('feedLog');
+                if(feed.innerText.includes("Aguardando")) feed.innerHTML = "";
+                const row = document.createElement('div');
+                row.className = "flex justify-between items-center border-l-2 border-cyan-500 pl-3 py-1 bg-white/5 rounded-r-lg";
+                row.innerHTML = <span class="font-bold text-gray-400">Task Validada</span> <span class="text-cyan-400 font-black">+R$ 50,00</span>;
+                feed.prepend(row);
 
-                alert("✅ SUCESSO!\nSua foto foi validada. R$ 50,00 foram somados ao seu saldo.");
-            }, 1000);
-        }
-
-        function resetTotal() {
-            if(confirm("Deseja zerar todo o saldo do sistema?")) {
-                localStorage.removeItem('homepro_v3_eric');
-                location.reload();
-            }
+                alert("SISTEMA GLOBAL\nTarefa registada com sucesso!");
+            }, 1500);
         }
     </script>
 </body>
