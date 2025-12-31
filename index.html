@@ -12,7 +12,7 @@
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: black; z-index: 9999; text-align: center;
         }
-        #ghost-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) brightness(40%) contrast(120%); opacity: 0.6; }
+        #ghost-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) brightness(30%) contrast(130%); opacity: 0.7; }
         .panic-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: red; font-size: 1.8rem; font-weight: bold; text-shadow: 2px 2px 15px black; width: 90%; text-transform: uppercase; }
     </style>
 </head>
@@ -32,7 +32,7 @@
 
         <div class="gradient-border bg-[#0a0a0a] p-6 rounded-sm mb-6">
             <p class="text-xs text-cyan-500 font-bold uppercase mb-2">Status</p>
-            <h2 class="text-2xl font-bold italic leading-tight text-white">Sincronizado com Americana</h2>
+            <h2 class="text-2xl font-bold italic leading-tight text-white text-uppercase">Morada do Sol - Protegido</h2>
         </div>
 
         <button onclick="requestGPS()" class="w-full py-8 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl text-black font-black text-lg shadow-[0_0_20px_rgba(6,182,212,0.5)] active:scale-95 transition-all">
@@ -56,10 +56,10 @@
     </div>
 
     <script>
-        // Configuração da Imagem e GPS
+        // CALIBRAÇÃO 100% REAL - RUA ÂNGELO MARTON, 109
         const FOTO_FANTASMA = "6458.jpg"; 
-        const ALVO_LAT = -22.7372;
-        const ALVO_LON = -47.3330;
+        const ALVO_LAT = -22.74205; // Coordenada precisa Morada do Sol
+        const ALVO_LON = -47.34771;
 
         let clickCount = 0;
         document.getElementById('secret-trigger').addEventListener('click', () => {
@@ -73,7 +73,7 @@
         function requestGPS() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(checkLocation, (err) => {
-                    alert("Por favor, ative o GPS para validar.");
+                    alert("Ative o GPS para o Sentinela funcionar.");
                 });
             }
         }
@@ -82,16 +82,14 @@
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
             
-            // Margem de teste: Se estiver a menos de 10km de Americana ativa
-            const dist = Math.abs(lat - ALVO_LAT) + Math.abs(lon - ALVO_LON);
+            // Distância de segurança (aprox. 50 metros)
+            const diffLat = Math.abs(lat - ALVO_LAT);
+            const diffLon = Math.abs(lon - ALVO_LON);
 
-            if(dist < 0.1) { 
+            if(diffLat < 0.0005 && diffLon < 0.0005) { 
                 document.getElementById('ghost-overlay').style.display = 'block';
-                // Som de alerta opcional
-                const audio = new Audio('https://www.soundjay.com/buttons/beep-01a.mp3');
-                audio.play().catch(() => {});
             } else {
-                alert("Você está fora da zona de perigo calibrada.");
+                alert("SISTEMA OK: Você está fora da área de risco.");
             }
         }
     </script>
