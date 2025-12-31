@@ -7,89 +7,63 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #050505; color: #e5e7eb; font-family: sans-serif; overflow: hidden; }
-        .gradient-border { border: 2px solid; border-image: linear-gradient(to right, #00d2ff, #3a7bd5) 1; }
         #ghost-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: black; z-index: 9999; text-align: center;
         }
-        #ghost-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) brightness(30%) contrast(130%); opacity: 0.7; }
-        .panic-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: red; font-size: 1.8rem; font-weight: bold; text-shadow: 2px 2px 15px black; width: 90%; text-transform: uppercase; }
+        #ghost-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) brightness(30%); opacity: 0.7; }
+        .panic-text { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            color: #ff0000; font-size: 1.5rem; font-weight: 900; text-shadow: 2px 2px 20px black; 
+            width: 85%; text-transform: uppercase; line-height: 1.2;
+        }
     </style>
 </head>
 <body>
 
     <div id="main-ui" class="p-6 flex flex-col h-screen">
-        <div class="flex justify-between items-center mb-8">
-            <div>
-                <h1 id="secret-trigger" class="text-3xl font-black italic text-white tracking-tighter">HOMEPRO</h1>
-                <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-[-5px]">Sentinela Ativo</p>
-            </div>
-            <div class="bg-[#111] p-3 rounded-2xl border border-gray-800 text-right">
-                <p class="text-[10px] text-cyan-400 font-bold uppercase">Pro Coins</p>
-                <p class="text-xl font-mono font-bold">R$ 0,00</p>
-            </div>
+        <h1 id="secret-trigger" class="text-3xl font-black italic text-white mb-8">HOMEPRO</h1>
+        <div class="border-2 border-cyan-600 p-6 bg-[#0a0a0a] rounded-lg mb-6">
+            <p class="text-xs text-cyan-400 font-bold uppercase">Monitoramento Residencial</p>
+            <h2 class="text-xl font-bold text-white">MODO: PROTEÇÃO FAMILIAR</h2>
         </div>
-
-        <div class="gradient-border bg-[#0a0a0a] p-6 rounded-sm mb-6">
-            <p class="text-xs text-cyan-500 font-bold uppercase mb-2">Status</p>
-            <h2 class="text-2xl font-bold italic leading-tight text-white text-uppercase">Morada do Sol - Protegido</h2>
-        </div>
-
-        <button onclick="requestGPS()" class="w-full py-8 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl text-black font-black text-lg shadow-[0_0_20px_rgba(6,182,212,0.5)] active:scale-95 transition-all">
-            VALIDAR PROVA REAL
+        <button onclick="requestGPS()" class="w-full py-10 bg-red-700 rounded-2xl text-white font-black text-xl shadow-lg active:scale-95 transition-all">
+            TESTAR IMPACTO REAL
         </button>
     </div>
 
     <div id="ghost-overlay">
-        <img id="ghost-img" src="6458.jpg" alt="Sentinela">
-        <div class="panic-text">VOCÊ ESTÁ EM ÁREA DE RISCO!<br><br>PENSE NA SUA FAMÍLIA.<br><br>SAIA DAQUI AGORA.</div>
-    </div>
-
-    <div id="family-ui" class="hidden fixed inset-0 bg-[#050505] p-8 z-[10000] overflow-y-auto">
-        <h2 class="text-red-600 text-3xl font-black mb-6">PROTOCOLO DE INTERVENÇÃO</h2>
-        <div class="space-y-4 text-gray-300">
-            <p class="border-l-4 border-red-600 pl-4"><strong>1. NÃO CONFRONTE:</strong> O tom de voz deve ser calmo e firme.</p>
-            <p class="border-l-4 border-red-600 pl-4"><strong>2. TAREFA ÚTIL:</strong> Peça ajuda com algo imediato em casa.</p>
-            <p class="border-l-4 border-red-600 pl-4"><strong>3. FOCO NO FILHO:</strong> Use a criança como âncora emocional.</p>
+        <img id="ghost-img" src="6458.jpg" alt="Família">
+        <div id="alert-message" class="panic-text">
+            NÃO FAÇA ISSO NO SEU LAR!<br><br>
+            SUA FAMÍLIA SOFRE E<br>
+            SEUS FILHOS FICAM TRISTES.
         </div>
-        <button onclick="location.reload()" class="mt-10 text-gray-600 text-sm underline">Sair do Protocolo</button>
     </div>
 
     <script>
-        // CALIBRAÇÃO 100% REAL - RUA ÂNGELO MARTON, 109
-        const FOTO_FANTASMA = "6458.jpg"; 
-        const ALVO_LAT = -22.74205; // Coordenada precisa Morada do Sol
+        const ALVO_LAT = -22.74205; 
         const ALVO_LON = -47.34771;
-
-        let clickCount = 0;
-        document.getElementById('secret-trigger').addEventListener('click', () => {
-            clickCount++;
-            if(clickCount >= 5) {
-                document.getElementById('family-ui').classList.remove('hidden');
-                clickCount = 0;
-            }
-        });
 
         function requestGPS() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(checkLocation, (err) => {
-                    alert("Ative o GPS para o Sentinela funcionar.");
-                });
+                navigator.geolocation.getCurrentPosition(checkLocation);
             }
         }
 
         function checkLocation(pos) {
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
-            
-            // Distância de segurança (aprox. 50 metros)
-            const diffLat = Math.abs(lat - ALVO_LAT);
-            const diffLon = Math.abs(lon - ALVO_LON);
+            const dist = Math.abs(lat - ALVO_LAT) + Math.abs(lon - ALVO_LON);
 
-            if(diffLat < 0.0005 && diffLon < 0.0005) { 
+            // Se estiver em casa (distância pequena), o sistema "bate forte"
+            if(dist < 0.001) { 
                 document.getElementById('ghost-overlay').style.display = 'block';
+                // Som de alerta grave
+                const audio = new Audio('https://www.soundjay.com/buttons/beep-07.mp3');
+                audio.play().catch(() => {});
             } else {
-                alert("SISTEMA OK: Você está fora da área de risco.");
+                alert("Fora da base. Sistema em modo Sentinela de Rua.");
             }
         }
     </script>
