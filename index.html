@@ -23,47 +23,51 @@
 
     <div id="main-ui" class="p-6 flex flex-col h-screen">
         <h1 id="secret-trigger" class="text-3xl font-black italic text-white mb-8">HOMEPRO</h1>
-        <div class="border-2 border-cyan-600 p-6 bg-[#0a0a0a] rounded-lg mb-6">
-            <p class="text-xs text-cyan-400 font-bold uppercase">Monitoramento Residencial</p>
-            <h2 class="text-xl font-bold text-white">MODO: PROTEÇÃO FAMILIAR</h2>
+        <div class="border-2 border-red-600 p-6 bg-[#0a0a0a] rounded-lg mb-6">
+            <p class="text-xs text-red-400 font-bold uppercase">Monitoramento Facial Ativo</p>
+            <h2 id="status-text" class="text-xl font-bold text-white">Sincronizando Localização...</h2>
         </div>
-        <button onclick="requestGPS()" class="w-full py-10 bg-red-700 rounded-2xl text-white font-black text-xl shadow-lg active:scale-95 transition-all">
-            TESTAR IMPACTO REAL
+        <button onclick="iniciarSentinela()" class="w-full py-10 bg-gradient-to-b from-gray-800 to-black rounded-2xl text-white font-black text-xl border border-gray-700 active:scale-95">
+            VALIDAR SENTINELA
         </button>
     </div>
 
     <div id="ghost-overlay">
         <img id="ghost-img" src="6458.jpg" alt="Família">
-        <div id="alert-message" class="panic-text">
-            NÃO FAÇA ISSO NO SEU LAR!<br><br>
-            SUA FAMÍLIA SOFRE E<br>
-            SEUS FILHOS FICAM TRISTES.
-        </div>
+        <div id="alert-message" class="panic-text"></div>
     </div>
 
     <script>
+        // COORDENADAS RUA ÂNGELO MARTON
         const ALVO_LAT = -22.74205; 
         const ALVO_LON = -47.34771;
 
-        function requestGPS() {
+        async function iniciarSentinela() {
+            // Tenta abrir a câmera para simular reconhecimento facial
+            try {
+                await navigator.mediaDevices.getUserMedia({ video: true });
+            } catch (e) { console.log("Câmera negada"); }
+
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(checkLocation);
+                navigator.geolocation.getCurrentPosition(processarSentinela);
             }
         }
 
-        function checkLocation(pos) {
+        function processarSentinela(pos) {
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
             const dist = Math.abs(lat - ALVO_LAT) + Math.abs(lon - ALVO_LON);
+            const overlay = document.getElementById('ghost-overlay');
+            const msg = document.getElementById('alert-message');
 
-            // Se estiver em casa (distância pequena), o sistema "bate forte"
-            if(dist < 0.001) { 
-                document.getElementById('ghost-overlay').style.display = 'block';
-                // Som de alerta grave
-                const audio = new Audio('https://www.soundjay.com/buttons/beep-07.mp3');
-                audio.play().catch(() => {});
+            overlay.style.display = 'block';
+
+            if(dist < 0.0005) { 
+                // IMPACTO EM CASA: PESADO E FAMILIAR
+                msg.innerHTML = "NÃO FAÇA ISSO NO SEU LAR!<br><br>SUA FAMÍLIA SOFRE E<br>SEUS FILHOS FICAM TRISTES.";
             } else {
-                alert("Fora da base. Sistema em modo Sentinela de Rua.");
+                // IMPACTO NA RUA: ÁREA DE RISCO
+                msg.innerHTML = "VOCÊ ESTÁ EM ÁREA DE RISCO!<br><br>PENSE NA SUA FAMÍLIA.<br><br>SAIA DAQUI AGORA.";
             }
         }
     </script>
