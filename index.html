@@ -2,139 +2,97 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>HOMEPRO OS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HOMEPRO - Sentinela v2</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #050505; color: #e5e5e5; font-family: 'Inter', sans-serif; overflow: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; }
-        .btn-action { background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: #000; font-weight: 900; border-radius: 18px; transition: 0.2s; }
-        .btn-action:active { transform: scale(0.95); }
-        .page { display: none; height: 80vh; overflow-y: auto; }
-        .page.active { display: block; }
-        
+        body { background-color: #050505; color: #e5e7eb; font-family: sans-serif; overflow: hidden; }
+        .gradient-border { border: 2px solid; border-image: linear-gradient(to right, #00d2ff, #3a7bd5) 1; }
         #ghost-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: black; z-index: 10000; display: none; align-items: center; justify-content: center;
-            pointer-events: none;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: black; z-index: 9999; text-align: center;
         }
+        #ghost-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) brightness(40%) contrast(120%); }
+        .panic-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: red; font-size: 2rem; font-weight: bold; text-shadow: 2px 2px 10px black; width: 90%; }
     </style>
 </head>
-<body class="p-5 flex flex-col justify-between min-h-screen">
+<body>
 
-    <div id="ghost-overlay"></div>
-
-    <header class="flex justify-between items-center mb-6">
-        <div onclick="acessoSecreto()"> 
-            <h1 class="text-2xl font-black italic tracking-tighter uppercase">Home<span class="text-[#00f2fe]">Pro</span></h1>
-            <p id="geo-status" class="text-[8px] font-bold text-gray-400 uppercase tracking-widest italic">Sentinela Ativo</p>
-        </div>
-        <div class="glass px-4 py-2 text-right">
-            <p class="text-[8px] font-black text-[#00f2fe] uppercase tracking-tighter">Pro Coins</p>
-            <div class="text-xl font-black italic">R$ <span id="main-balance">0,00</span></div>
-        </div>
-    </header>
-
-    <main class="flex-1">
-        
-        <div id="page-home" class="page active space-y-4">
-            <div class="glass p-6 border-l-4 border-cyan-500">
-                <p class="text-[10px] font-bold text-cyan-500 mb-1 uppercase tracking-widest">Status</p>
-                <h2 class="text-lg font-bold italic" id="estelar-msg">Sincronizado com Americana</h2>
+    <div id="main-ui" class="p-6 flex flex-col h-screen">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 id="secret-trigger" class="text-3xl font-black italic text-white tracking-tighter">HOMEPRO</h1>
+                <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-[-5px]">Sentinela Ativo</p>
             </div>
-            <div class="glass p-8 text-center space-y-6">
-                <button onclick="alert('Sistema de Prova Ativo.')" class="btn-action w-full py-6 text-sm uppercase tracking-widest shadow-2xl">Validar Prova Real</button>
+            <div class="bg-[#111] p-3 rounded-2xl border border-gray-800 text-right">
+                <p class="text-[10px] text-cyan-400 font-bold uppercase">Pro Coins</p>
+                <p class="text-xl font-mono font-bold">R$ 0,00</p>
             </div>
         </div>
 
-        <div id="page-family" class="page space-y-4">
-            <h3 class="text-[#00f2fe] font-black text-xs uppercase tracking-[0.3em] mb-2">Painel do Monitor</h3>
-            <div class="glass p-5 border-l-4 border-red-500 bg-red-500/5">
-                <p class="text-[10px] font-black text-red-500 uppercase mb-3 tracking-widest">Conduta de Emergência</p>
-                <ul class="text-[11px] space-y-3 text-gray-300 font-bold uppercase">
-                    <li>⚠️ NÃO CONFRONTE OU BRIGUE.</li>
-                    <li>⚠️ IGNORE O "SURTO" E DÊ UMA TAREFA ÚTIL.</li>
-                    <li>⚠️ FAÇA-O SE SENTIR NECESSÁRIO NA CASA.</li>
-                    <li>⚠️ USE O "VOCÊ É O PROTETOR DAQUI".</li>
-                </ul>
-            </div>
-            <div class="glass p-4">
-                <p class="text-[8px] font-black text-gray-500 uppercase mb-2">Logs de Risco</p>
-                <div id="audit-feed" class="space-y-2 text-[9px] font-mono"></div>
-            </div>
+        <div class="gradient-border bg-[#0a0a0a] p-6 rounded-sm mb-6">
+            <p class="text-xs text-cyan-500 font-bold uppercase mb-2">Status</p>
+            <h2 class="text-2xl font-bold italic leading-tight">Sincronizado com Americana</h2>
         </div>
 
-    </main>
+        <button onclick="requestGPS()" class="w-full py-8 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl text-black font-black text-lg shadow-[0_0_20px_rgba(6,182,212,0.5)] active:scale-95 transition-all">
+            VALIDAR PROVA REAL
+        </button>
+    </div>
+
+    <div id="ghost-overlay">
+        <img id="ghost-img" src="6458.jpg" alt="Sentinela">
+        <div class="panic-text">VOCÊ ESTÁ EM ÁREA DE RISCO!<br>PENSE NA SUA FAMÍLIA.<br>SAIA DAQUI AGORA.</div>
+    </div>
+
+    <div id="family-ui" class="hidden fixed inset-0 bg-[#050505] p-8 z-[10000] overflow-y-auto">
+        <h2 class="text-red-600 text-3xl font-black mb-6">PROTOCOLO DE INTERVENÇÃO</h2>
+        <div class="space-y-4 text-gray-300">
+            <p class="border-l-4 border-red-600 pl-4"><strong>1. NÃO CONFRONTE:</strong> O tom de voz deve ser calmo e firme.</p>
+            <p class="border-l-4 border-red-600 pl-4"><strong>2. TAREFA ÚTIL:</strong> Peça ajuda com algo imediato em casa.</p>
+            <p class="border-l-4 border-red-600 pl-4"><strong>3. FOCO NO FILHO:</strong> Use a criança como âncora emocional.</p>
+        </div>
+        <button onclick="location.reload()" class="mt-10 text-gray-600 text-sm underline">Sair do Protocolo</button>
+    </div>
 
     <script>
-        let secretClick = 0;
-        let logs = [];
-
-        // --- CONFIGURAÇÃO REAL ---
-        const ZONAS_RISCO = [
-            { lat: -22.739, lon: -47.331, nome: "PONTO_CRITICO" } 
-        ];
+        // Configuração da Foto
         const FOTO_FANTASMA = "6458.jpg"; 
+        
+        // Coordenadas Americana (Exemplo de teste)
+        const ALVO_LAT = -22.7372;
+        const ALVO_LON = -47.3330;
 
-        function init() {
-            startSentinela();
-        }
+        let clickCount = 0;
+        document.getElementById('secret-trigger').addEventListener('click', () => {
+            clickCount++;
+            if(clickCount >= 5) {
+                document.getElementById('family-ui').classList.remove('hidden');
+                clickCount = 0;
+            }
+        });
 
-        function startSentinela() {
-            if(navigator.geolocation) {
-                navigator.geolocation.watchPosition(p => {
-                    const { latitude, longitude } = p.coords;
-                    document.getElementById('geo-status').innerText = LAT: ${latitude.toFixed(3)} | LON: ${longitude.toFixed(3)};
-                    
-                    ZONAS_RISCO.forEach(zona => {
-                        const dist = Math.sqrt(Math.pow(latitude - zona.lat, 2) + Math.pow(longitude - zona.lon, 2));
-                        if(dist < 0.0005) { 
-                            executarModuloFantasma();
-                        }
-                    });
-                }, null, { enableHighAccuracy: true });
+        function requestGPS() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(checkLocation);
             }
         }
 
-        function executarModuloFantasma() {
-            const overlay = document.getElementById('ghost-overlay');
-            overlay.innerHTML = `
-                <div style="width:100%; height:100%; position:relative; background:black;">
-                    <img src="${FOTO_FANTASMA}" style="width:100%; height:100%; object-fit:cover; filter: brightness(0.3) contrast(1.4) grayscale(0.2);">
-                    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; width:90%;">
-                        <h2 style="color:white; font-family:sans-serif; font-weight:900; letter-spacing:4px; text-shadow: 0 0 20px red;">
-                            SOCORRO!<br><span style="font-size:0.5em;">VOLTA PARA CASA AGORA</span>
-                        </h2>
-                    </div>
-                </div>
-            `;
-            overlay.style.display = 'flex';
-            if(navigator.vibrate) navigator.vibrate([100,50,100,50,500,100,500]);
+        function checkLocation(pos) {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            
+            // Simulação de proximidade para teste
+            const dist = Math.abs(lat - ALVO_LAT) + Math.abs(lon - ALVO_LON);
 
-            setTimeout(() => { 
-                overlay.style.display = 'none'; 
-                registrarEvento("RISCO DETECTADO - FANTASMA ACIONADO");
-            }, 4000);
-        }
-
-        function acessoSecreto() {
-            secretClick++;
-            if(secretClick >= 5) {
-                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                document.getElementById('page-family').classList.add('active');
-                secretClick = 0;
+            if(dist < 0.1) { // Se estiver perto do ponto em Americana
+                document.getElementById('ghost-overlay').style.display = 'block';
+                const audio = new Audio('https://www.soundjay.com/buttons/beep-01a.mp3');
+                audio.play();
+            } else {
+                alert("Status: Fora da zona de risco. Sistema em espera.");
             }
         }
-
-        function registrarEvento(msg) {
-            logs.unshift({ time: new Date().toLocaleTimeString(), msg });
-            document.getElementById('audit-feed').innerHTML = logs.map(l => 
-                <div class="border-b border-white/5 py-1 text-red-400">${l.time} > ${l.msg}</div>
-            ).join('');
-        }
-
-        init();
     </script>
 </body>
 </html>
