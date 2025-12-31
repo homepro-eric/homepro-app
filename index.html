@@ -12,8 +12,8 @@
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: black; z-index: 9999; text-align: center;
         }
-        #ghost-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) brightness(40%) contrast(120%); }
-        .panic-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: red; font-size: 2rem; font-weight: bold; text-shadow: 2px 2px 10px black; width: 90%; }
+        #ghost-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) brightness(40%) contrast(120%); opacity: 0.6; }
+        .panic-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: red; font-size: 1.8rem; font-weight: bold; text-shadow: 2px 2px 15px black; width: 90%; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -32,7 +32,7 @@
 
         <div class="gradient-border bg-[#0a0a0a] p-6 rounded-sm mb-6">
             <p class="text-xs text-cyan-500 font-bold uppercase mb-2">Status</p>
-            <h2 class="text-2xl font-bold italic leading-tight">Sincronizado com Americana</h2>
+            <h2 class="text-2xl font-bold italic leading-tight text-white">Sincronizado com Americana</h2>
         </div>
 
         <button onclick="requestGPS()" class="w-full py-8 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl text-black font-black text-lg shadow-[0_0_20px_rgba(6,182,212,0.5)] active:scale-95 transition-all">
@@ -42,7 +42,7 @@
 
     <div id="ghost-overlay">
         <img id="ghost-img" src="6458.jpg" alt="Sentinela">
-        <div class="panic-text">VOCÊ ESTÁ EM ÁREA DE RISCO!<br>PENSE NA SUA FAMÍLIA.<br>SAIA DAQUI AGORA.</div>
+        <div class="panic-text">VOCÊ ESTÁ EM ÁREA DE RISCO!<br><br>PENSE NA SUA FAMÍLIA.<br><br>SAIA DAQUI AGORA.</div>
     </div>
 
     <div id="family-ui" class="hidden fixed inset-0 bg-[#050505] p-8 z-[10000] overflow-y-auto">
@@ -56,10 +56,8 @@
     </div>
 
     <script>
-        // Configuração da Foto
+        // Configuração da Imagem e GPS
         const FOTO_FANTASMA = "6458.jpg"; 
-        
-        // Coordenadas Americana (Exemplo de teste)
         const ALVO_LAT = -22.7372;
         const ALVO_LON = -47.3330;
 
@@ -74,7 +72,9 @@
 
         function requestGPS() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(checkLocation);
+                navigator.geolocation.getCurrentPosition(checkLocation, (err) => {
+                    alert("Por favor, ative o GPS para validar.");
+                });
             }
         }
 
@@ -82,15 +82,16 @@
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
             
-            // Simulação de proximidade para teste
+            // Margem de teste: Se estiver a menos de 10km de Americana ativa
             const dist = Math.abs(lat - ALVO_LAT) + Math.abs(lon - ALVO_LON);
 
-            if(dist < 0.1) { // Se estiver perto do ponto em Americana
+            if(dist < 0.1) { 
                 document.getElementById('ghost-overlay').style.display = 'block';
+                // Som de alerta opcional
                 const audio = new Audio('https://www.soundjay.com/buttons/beep-01a.mp3');
-                audio.play();
+                audio.play().catch(() => {});
             } else {
-                alert("Status: Fora da zona de risco. Sistema em espera.");
+                alert("Você está fora da zona de perigo calibrada.");
             }
         }
     </script>
